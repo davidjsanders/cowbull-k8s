@@ -102,6 +102,8 @@ items:
           volumeMounts:
           - mountPath: /data
             name: redis-data
+          securityContext:
+            runAsUser: 0
         containers:
         - image: ${docker_hub}redis:latest
           name: redis
