@@ -42,25 +42,28 @@ eval set -- "$options"
 while true; do
     case "$1" in
     -s)
-        SOURCE_REGISTRY="$1"
+        SOURCE_REGISTRY="$2"
+        shift 2
         ;;
     -t)
-        TARGET_REGISTRY="$1"
+        TARGET_REGISTRY="$2"
+        shift 2
         ;;
     -l)
-        LBIP="$1"
+        LBIP="$2"
+        shift 2
         ;;
     --source)
-        shift; # The arg is next in position args
-        SOURCE_REGISTRY=$1
+        SOURCE_REGISTRY=$2
+        shift 2
         ;;
     --target)
-        shift; # The arg is next in position args
-        TARGET_REGISTRY=$1
+        TARGET_REGISTRY=$2
+        shift 2
         ;;
     --lbip)
-        shift; # The arg is next in position args
         LBIP=$1
+        shift 2
         ;;
     --)
         shift
@@ -73,13 +76,15 @@ done
 echo "Source registry : "$SOURCE_REGISTRY
 echo "Target registry : "$TARGET_REGISTRY
 echo "Load Balancer IP: "$LBIP
-exit 0
 
-if [ -z "${LBIP+x}" ]
+if [ -z ${LBIP+x} ] || [ -z ${SOURCE_REGISTRY} ] || [ -z ${TARGET_REGISTRY} ]
 then
-    short_banner "Unable to proceed: The environment variable LBIP (Load Balancer IP) must be set!"
+    short_banner "Unable to proceed: missing arguments"
+    usage
     exit 1
 fi
+
+exit 0
 
 echo
 echo "Preparing images"
