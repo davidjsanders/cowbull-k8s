@@ -46,6 +46,7 @@ while true; do
         shift 2
         ;;
     -t | --target)
+        echo "Processing target, \$1 = $1, \$2 = $2"
         TARGET_REGISTRY="$2"
         shift 2
         ;;
