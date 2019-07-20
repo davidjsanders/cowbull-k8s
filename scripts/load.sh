@@ -43,15 +43,15 @@ while true; do
     case "$1" in
     -s|--source)
         SOURCE_REGISTRY="$2"
-        shift
+        shift 2
         ;;
     -t|--target)
         TARGET_REGISTRY="$2"
-        shift
+        shift 2
         ;;
     -l|--lbip)
         LBIP="$2"
-        shift
+        shift 2
         ;;
     --)
         shift
