@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cowbull-ingress
+  namespace: cowbull
+spec:
+  rules:
+  - host: cowbull.${LBIP}.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cowbull-webapp
+          servicePort: cowbull-http

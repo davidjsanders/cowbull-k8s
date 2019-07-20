@@ -98,13 +98,13 @@ items:
         containers:
         - image: ${docker_hub}redis:latest
           name: redis
-          resources:
-            limits:
-              memory: "200Mi"
-              cpu: "0.8"
-            requests:
-              memory: "100Mi"
-              cpu: "0.2"
+          # resources:
+          #   limits:
+          #     memory: "200Mi"
+          #     cpu: "0.8"
+          #   requests:
+          #     memory: "100Mi"
+          #     cpu: "0.2"
           volumeMounts:
           - mountPath: /data
             name: redis-data
