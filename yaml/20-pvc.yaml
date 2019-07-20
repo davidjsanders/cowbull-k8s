@@ -1,27 +1,27 @@
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  labels:
-    type: local-storage
-  name: redis-data-pv
-  namespace: cowbull
-spec:
-  capacity:
-    storage: 500Mi
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: local-storage
-  local:
-    path: "/datadrive/cowbull/redis-data"
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-         - key: node-role.kubernetes.io/master
-           operator: DoesNotExist
-  persistentVolumeReclaimPolicy: Retain
----
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   labels:
+#     type: local-storage
+#   name: redis-data-pv
+#   namespace: cowbull
+# spec:
+#   capacity:
+#     storage: 500Mi
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: local-storage
+#   local:
+#     path: "/datadrive/cowbull/redis-data"
+#   nodeAffinity:
+#     required:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#          - key: node-role.kubernetes.io/master
+#            operator: DoesNotExist
+#   persistentVolumeReclaimPolicy: Retain
+# ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

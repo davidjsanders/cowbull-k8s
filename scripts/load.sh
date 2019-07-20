@@ -106,12 +106,14 @@ then
     short_banner "No yaml files found; skipping yaml."
 else
     short_banner "Processing: $yaml_files"
+    #storage_class="local-storage"
+    storage_class="example-nfs"
     for file in $yaml_files
     do
         short_banner "Applying yaml for: $file"
         sed '
             s/\${LBIP}/'"$LBIP"'/g;
-            s/\${STORAGE_CLASS}/local-storage/g;
+            s/\${STORAGE_CLASS}/'"$storage_class"'/g;
             s/\${target_registry}/'"$target_registry"'/g
             s/\${docker_hub}//g
         ' $file | kubectl apply -f - &> /dev/null
