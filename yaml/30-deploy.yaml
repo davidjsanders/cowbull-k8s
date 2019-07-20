@@ -117,7 +117,7 @@ items:
         volumes:
         - name: redis-data
           persistentVolumeClaim:
-            claimName: redis-data
+            claimName: redis-data-pvc
   status: {}
 kind: List
 metadata: {}
