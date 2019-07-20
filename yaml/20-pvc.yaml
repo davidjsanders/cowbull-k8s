@@ -3,10 +3,18 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-data
+  labels:
+    type: local-storage
   namespace: cowbull
 spec:
   accessModes:
   - ReadWriteOnce
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+         - key: node-role.kubernetes.io/master
+           operator: DoesNotExist
   resources:
     requests:
       storage: 200Mi
