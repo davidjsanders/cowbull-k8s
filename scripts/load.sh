@@ -43,25 +43,21 @@ while true; do
     case "$1" in
     -s | --source)
         SOURCE_REGISTRY="$2"
-        shift
-        shift
+        shift 2
         ;;
     -t | --target)
         TARGET_REGISTRY="$2"
-        shift
-        shift
+        shift 2
         ;;
     -l | --lbip)
         LBIP="$2"
-        shift
-        shift
+        shift 2
         ;;
     --)
         shift
         break
         ;;
     esac
-    shift
 done
 
 echo "Source registry : "$SOURCE_REGISTRY
