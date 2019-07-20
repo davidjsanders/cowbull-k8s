@@ -75,15 +75,13 @@ fi
 
 echo
 short_banner "Preparing images"
-echo
-
 source_registry="$SOURCE_REGISTRY"
 target_registry="$TARGET_REGISTRY"
 images=("cowbull:2.0.119 cowbull_webapp:1.0.193")
 for image in $images
 do
     image_name="$source_registry/$image"
-    short_banner "Pull $image_name from local registry"
+    short_banner "Pull $target_registry/$image from local registry"
     sudo docker pull ${target_registry}/$image &> /dev/null
     ret_stat="$?"
 
@@ -97,7 +95,6 @@ do
         sudo docker push $target_registry/$image
         echo
     else
-	echo
     fi
 done
 
