@@ -20,7 +20,9 @@ spec:
       - matchExpressions:
          - key: kubernetes.io/hostname
            operator: In
-           values: [vm-djs-k8s-worker-1-eus-5075, vm-djs-k8s-worker-2-eus-5075]
+           values: 
+           - "vm-djs-k8s-worker-1-eus-5075"
+           - "vm-djs-k8s-worker-2-eus-5075"
       # - matchExpressions:
       #    - key: node-role.kubernetes.io/master
       #      operator: DoesNotExist
