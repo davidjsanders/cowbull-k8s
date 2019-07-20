@@ -4,6 +4,6 @@ metadata:
   name: cowbull
 spec:
   finalizers:
-  - kubernetes
+  - "kubernetes"
 status:
   phase: Active

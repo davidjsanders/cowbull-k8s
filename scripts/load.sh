@@ -77,9 +77,9 @@ then
 fi
 
 echo
-short_banner "Preparing images"
 source_registry="$SOURCE_REGISTRY"
 target_registry="$TARGET_REGISTRY"
+short_banner "Preparing images; pulling from $source_registry and pushing to $target_registry"
 images=("cowbull:2.0.119 cowbull_webapp:1.0.193")
 for image in $images
 do
@@ -109,7 +109,12 @@ else
     for file in $yaml_files
     do
         short_banner "Applying yaml for: $file"
-        kubectl apply -f $file
+        sed '
+            s/\${LBIP}/'"$LBIP"'/g;
+            s/\${LBIP}/'"$LBIP"'/g;
+            s/\${LBIP}/'"$LBIP"'/g
+        ' $file |
+        kubectl apply -f $file &> /dev/null
         echo
     done
 fi
