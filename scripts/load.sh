@@ -116,10 +116,16 @@ fi
 
 echo
 short_banner "Applying Ingress"
-sed 's/\${LBIP}/'"$LBIP"'/g' yaml/ingress.yaml.env | kubectl apply -f -
-if [ "$?" != "0" ]
+ingress_file="yaml/ingress.yaml.env"
+if [ ! $ingress_file ]
 then
-    short_banner "Couldn't apply Ingress; skipping"
+    short_banner "No ingress file ($ingress_file) found; skipping"
+else
+    sed 's/\${LBIP}/'"$LBIP"'/g' yaml/ingress.yaml.env | kubectl apply -f -
+    if [ "$?" != "0" ]
+    then
+        short_banner "Couldn't apply Ingress; skipping"
+    fi
 fi
 echo
 
