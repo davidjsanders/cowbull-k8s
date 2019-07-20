@@ -43,27 +43,27 @@ while true; do
     case "$1" in
     -s)
         SOURCE_REGISTRY="$2"
-        shift 2
+        shift
         ;;
     -t)
         TARGET_REGISTRY="$2"
-        shift 2
+        shift
         ;;
     -l)
         LBIP="$2"
-        shift 2
+        shift
         ;;
     --source)
         SOURCE_REGISTRY=$2
-        shift 2
+        shift
         ;;
     --target)
         TARGET_REGISTRY=$2
-        shift 2
+        shift
         ;;
     --lbip)
         LBIP=$1
-        shift 2
+        shift
         ;;
     --)
         shift
