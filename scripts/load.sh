@@ -117,7 +117,7 @@ fi
 echo
 short_banner "Applying Ingress"
 ingress_file="yaml/ingress.yaml.env"
-if [ ! $ingress_file ]
+if [ ! -f $ingress_file ]
 then
     short_banner "No ingress file ($ingress_file) found; skipping"
 else
