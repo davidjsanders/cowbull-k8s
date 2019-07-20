@@ -100,12 +100,12 @@ do
     fi
 done
 
-yaml_files=$(ls -1 yaml/[0-9]*.yaml &> /dev/null)
+yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
 if [ "$?" != "0" ]
 then
     short_banner "No yaml files found; skipping yaml."
 else
-    log_banner "load.sh" "Load cowbull yaml files"
+    short_banner "Processing: $yaml_files"
     for file in $yaml_files
     do
         short_banner "Applying yaml for: $file"
