@@ -17,6 +17,9 @@
 # 20 Jul 2019  | David Sanders               | First release.
 # -------------------------------------------------------------------
 
+# Set fail on pipeline
+set -o pipefail
+
 # Include the log_banner functions for logging purposes (see 
 # scripts/log_banner.sh)
 #
@@ -114,8 +117,11 @@ fi
 
 echo
 short_banner "Applying Ingress"
-echo
 sed 's/\${LBIP}/'"$LBIP"'/g' yaml/ingress.yaml.env | kubectl apply -f -
+if [ "$?" != "0" ]
+then
+    short_banner "Couldn't apply Ingress; skipping"
+fi
 echo
 
 echo
