@@ -33,33 +33,34 @@ usage()
 # Call getopt to validate the provided input. 
 options=$(getopt -o s:t:l: -l source:target:lbip: -- "$@")
 [ $? -eq 0 ] || { 
-    echo "Incorrect options provided"
+    short_banner "Incorrect options provided"
+    usage
     exit 1
 }
+
 eval set -- "$options"
 while true; do
     case "$1" in
     -s)
-        COLOR=BLUE
+        SOURCE_REGISTRY="$1"
         ;;
     -t)
-        COLOR=RED
+        TARGET_REGISTRY="$1"
+        ;;
+    -l)
+        LBIP="$1"
         ;;
     --source)
         shift; # The arg is next in position args
-        COLOR=$1
-        [[ ! $COLOR =~ BLUE|RED|GREEN ]] && {
-            echo "Incorrect options provided"
-            exit 1
-        }
+        SOURCE_REGISTRY=$1
         ;;
     --target)
         shift; # The arg is next in position args
-        COLOR=$1
-        [[ ! $COLOR =~ BLUE|RED|GREEN ]] && {
-            echo "Incorrect options provided"
-            exit 1
-        }
+        TARGET_REGISTRY=$1
+        ;;
+    --lbip)
+        shift; # The arg is next in position args
+        LBIP=$1
         ;;
     --)
         shift
@@ -69,6 +70,10 @@ while true; do
     shift
 done
 
+echo "Source registry : "$SOURCE_REGISTRY
+echo "Target registry : "$TARGET_REGISTRY
+echo "Load Balancer IP: "$LBIP
+exit 0
 
 if [ -z "${LBIP+x}" ]
 then
