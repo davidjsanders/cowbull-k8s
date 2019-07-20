@@ -41,29 +41,20 @@ options=$(getopt -o s:t:l: -l source:target:lbip: -- "$@")
 eval set -- "$options"
 while true; do
     case "$1" in
-    -s)
+    -s | --source)
         SOURCE_REGISTRY="$2"
         shift
-        ;;
-    -t)
-        TARGET_REGISTRY="$2"
         shift
         ;;
-    -l)
-        LBIP="$2"
+    -t | --target)
+        TARGET_REGISTRY="$2"
+        shift
         shift
         ;;
-    --source)
-        SOURCE_REGISTRY="$2"
-        shift 2
-        ;;
-    --target)
-        TARGET_REGISTRY="$2"
-        shift 2
-        ;;
-    --lbip)
+    -l | --lbip)
         LBIP="$2"
-        shift 2
+        shift
+        shift
         ;;
     --)
         shift
