@@ -54,15 +54,15 @@ while true; do
         shift
         ;;
     --source)
-        SOURCE_REGISTRY=$2
+        SOURCE_REGISTRY="$2"
         shift 2
         ;;
     --target)
-        TARGET_REGISTRY=$2
+        TARGET_REGISTRY="$2"
         shift 2
         ;;
     --lbip)
-        LBIP=$2
+        LBIP="$2"
         shift 2
         ;;
     --)
