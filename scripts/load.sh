@@ -113,7 +113,7 @@ else
             s/\${LBIP}/'"$LBIP"'/g;
             s/\${STORAGE_CLASS}/local-storage/g;
             s/\${LBIP}/'"$LBIP"'/g
-        ' $file | kubectl apply -f $file &> /dev/null
+        ' $file | kubectl apply -f - &> /dev/null
         if [ "$?" != "0" ]
         then
             short_banner "There was an error applying $file"
