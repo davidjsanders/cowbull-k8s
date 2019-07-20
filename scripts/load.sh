@@ -31,7 +31,7 @@ usage()
 }
 
 # Call getopt to validate the provided input. 
-options=$(getopt -o s:t:l: -l source:target:lbip: -- "$@")
+options=$(getopt -o "s:t:l:" -l "source:target:lbip:" -- "$@")
 [ $? -eq 0 ] || { 
     short_banner "Incorrect options provided"
     usage
@@ -60,9 +60,10 @@ while true; do
     esac
 done
 
-echo "Source registry : "$SOURCE_REGISTRY
-echo "Target registry : "$TARGET_REGISTRY
-echo "Load Balancer IP: "$LBIP
+short_banner "Source registry : "$SOURCE_REGISTRY
+short_banner "Target registry : "$TARGET_REGISTRY
+short_banner "Load Balancer IP: "$LBIP
+echo
 
 if [ -z ${LBIP+x} ] || [ -z ${SOURCE_REGISTRY} ] || [ -z ${TARGET_REGISTRY} ]
 then
