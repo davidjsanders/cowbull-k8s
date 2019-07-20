@@ -1,0 +1,123 @@
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: cowbull-svc
+    name: cowbull-svc
+    namespace: cowbull
+  spec:
+    replicas: 3
+    strategy: {}
+    template:
+      metadata:
+        labels:
+          app: cowbull-svc
+      spec:
+        containers:
+        - env:
+          - name: LOGGING_LEVEL
+            value: "10"
+          - name: PERSISTER
+            value: '{"engine_name": "redis", "parameters": {"host": "redis-svc", "port":
+              6379, "db": 0}}'
+          image: ${target_registry}/cowbull:2.0.119
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          name: cowbull-svc
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "1"
+            requests:
+              memory: "100Mi"
+              cpu: "0.2"
+        restartPolicy: Always
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: cowbull-webapp
+    name: cowbull-webapp
+    namespace: cowbull
+  spec:
+    replicas: 5
+    strategy: {}
+    template:
+      metadata:
+        labels:
+          app: cowbull-webapp
+      spec:
+        containers:
+        - env:
+          - name: BUILD_NUMBER
+            value: 1.0.193-KOMPOSE
+          - name: COWBULL_ENVIRONMENT
+            value: 2.0.119
+          - name: COWBULL_PORT
+            value: "8080"
+          - name: COWBULL_SERVER
+            value: cowbull-svc
+          - name: COWBULL_VERSION
+            value: v1
+          image: ${target_registry}/cowbull_webapp:1.0.193
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          name: cowbull-webapp
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "0.5"
+            requests:
+              memory: "100Mi"
+              cpu: "0.1"
+        restartPolicy: Always
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: redis
+    name: redis
+    namespace: cowbull
+  spec:
+    replicas: 1
+    strategy: {}
+    template:
+      metadata:
+        labels:
+          app: redis
+      spec:
+        containers:
+        - image: ${docker_hub}redis:latest
+          name: redis
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "0.8"
+            requests:
+              memory: "100Mi"
+              cpu: "0.2"
+          volumeMounts:
+          - mountPath: /data
+            name: redis-data
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        restartPolicy: Always
+        volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data
+  status: {}
+kind: List
+metadata: {}

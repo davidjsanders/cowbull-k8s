@@ -112,7 +112,8 @@ else
         sed '
             s/\${LBIP}/'"$LBIP"'/g;
             s/\${STORAGE_CLASS}/local-storage/g;
-            s/\${LBIP}/'"$LBIP"'/g
+            s/\${target_registry}/'"$target_registry"'/g
+            s/\${docker_hub}//g
         ' $file | kubectl apply -f - &> /dev/null
         if [ "$?" != "0" ]
         then
