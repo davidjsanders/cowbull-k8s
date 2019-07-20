@@ -111,7 +111,7 @@ else
         short_banner "Applying yaml for: $file"
         sed '
             s/\${LBIP}/'"$LBIP"'/g;
-            s/\${LBIP}/'"$LBIP"'/g;
+            s/\${STORAGE_CLASS}/example-nfs/g;
             s/\${LBIP}/'"$LBIP"'/g
         ' $file |
         kubectl apply -f $file &> /dev/null
