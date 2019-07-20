@@ -74,25 +74,26 @@ then
 fi
 
 echo
-echo "Preparing images"
+short_banner "Preparing images"
 echo
+
 source_registry="$SOURCE_REGISTRY"
 target_registry="$TARGET_REGISTRY"
 images=("cowbull:2.0.119 cowbull_webapp:1.0.193")
 for image in $images
 do
     image_name="$source_registry/$image"
-    echo "Pull $image_name from local registry"
-    sudo docker pull ${target_registry}/$image
+    short_banner "Pull $image_name from local registry"
+    sudo docker pull ${target_registry}/$image &> /dev/null
     ret_stat="$?"
 
     if [ "$ret_stat" != "0" ]
     then
-	echo "Not found, pulling $image_name from Docker Hub"
-        sudo docker pull $image_name
-        echo "Tagging as $target_registry/$image"
-        sudo docker tag $image_name $target_registry/$image
-        echo "Pushing as $target_registry/$image"
+	    short_banner "Not found, pulling $image_name from Docker Hub"
+        sudo docker pull $image_name &> /dev/null
+        short_banner "Tagging as $target_registry/$image"
+        sudo docker tag $image_name $target_registry/$image &> /dev/null
+        short_banner "Pushing as $target_registry/$image"
         sudo docker push $target_registry/$image
         echo
     else
@@ -108,7 +109,7 @@ else
     log_banner "load.sh" "Load cowbull yaml files"
     for file in $yaml_files
     do
-        echo "Applying yaml for: $file"
+        short_banner "Applying yaml for: $file"
         kubectl apply -f $file
         echo
     done
