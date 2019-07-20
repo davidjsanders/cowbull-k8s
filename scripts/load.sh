@@ -97,7 +97,6 @@ do
         short_banner "Pushing as $target_registry/$image"
         sudo docker push $target_registry/$image
         echo
-    else
     fi
 done
 
