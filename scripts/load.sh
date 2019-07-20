@@ -78,8 +78,8 @@ exit 0
 echo
 echo "Preparing images"
 echo
-source_registry="dsanderscan"
-target_registry="k8s-master:32081"
+source_registry="$SOURCE_REGISTRY"
+target_registry="$TARGET_REGISTRY"
 images=("cowbull:2.0.119 cowbull_webapp:1.0.193")
 for image in $images
 do
@@ -102,7 +102,7 @@ do
     fi
 done
 
-yaml_files=$(ls -1 /datadrive/azadmin/cowbull/[0-9]*.yaml &> /dev/null)
+yaml_files=$(ls -1 yaml/[0-9]*.yaml &> /dev/null)
 if [ "$?" != "0" ]
 then
     short_banner "No yaml files found; skipping yaml."
@@ -119,22 +119,12 @@ fi
 echo
 short_banner "Applying Ingress"
 echo
-sed 's/\${LBIP}/'"$LBIP"'/g' /datadrive/azadmin/cowbull/ingress.yaml.env | kubectl apply -f -
+sed 's/\${LBIP}/'"$LBIP"'/g' yaml/ingress.yaml.env | kubectl apply -f -
 echo
 
 echo
-echo "Access ingress at cowbull.${LBIP}.xip.io"
-echo
-echo "Done."
+short_banner "Access ingress at cowbull.${LBIP}.xip.io"
 echo
 
-yaml_files=$(ls -1 ../yaml/[0-9]*.yaml &> /dev/null)
-
-for file in $yaml_files
-do
-    short_banner "Applying yaml for: $file"
-    kubectl apply -f $file
-    echo
-done
-short_banner "Done."
+log_banner "load.sh" "Done."
 echo
