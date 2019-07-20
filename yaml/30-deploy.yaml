@@ -95,6 +95,17 @@ items:
         labels:
           app: redis
       spec:
+        initContainers:
+        - name: chmod-er
+          image: busybox:latest
+          command:
+          - /bin/chown
+          - -R
+          - 1000  # or whatever the mongo UID is
+          - /data
+          volumeMounts:
+          - mountPath: /data
+            name: redis-data
         containers:
         - image: ${docker_hub}redis:latest
           name: redis
