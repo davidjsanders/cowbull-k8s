@@ -31,7 +31,7 @@ usage()
 }
 
 # Call getopt to validate the provided input. 
-options=$(getopt -o "s:t:l:" -l "source:target:lbip:" -- "$@")
+options=$(getopt -o "s:t:l:" -l "source:,target:,lbip:" -- "$@")
 [ $? -eq 0 ] || { 
     short_banner "Incorrect options provided"
     usage
