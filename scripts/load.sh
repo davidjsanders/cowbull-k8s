@@ -25,7 +25,7 @@ source scripts/banner.sh
 log_banner "load.sh" "Loading cowbull"
 
 # Call getopt to validate the provided input. 
-options=$(getopt -s:t: --long source:target: -- "$@")
+options=$(getopt -s:t: -l source:target: -- "$@")
 [ $? -eq 0 ] || { 
     echo "Incorrect options provided"
     exit 1
