@@ -106,8 +106,8 @@ then
     short_banner "No yaml files found; skipping yaml."
 else
     short_banner "Processing: $yaml_files"
-    storage_class="local-storage"
-    #storage_class="example-nfs"
+    #storage_class="local-storage"
+    storage_class="example-nfs"
     for file in $yaml_files
     do
         short_banner "Applying yaml for: $file"
