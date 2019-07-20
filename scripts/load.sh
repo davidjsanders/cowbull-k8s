@@ -23,9 +23,15 @@
 source scripts/banner.sh
 
 log_banner "load.sh" "Loading cowbull"
+usage() 
+{ 
+    short_banner "-s source registry (--source)"
+    short_banner "-t target registry (--target)"
+    short_banner "-l load-balancer-ip (--lbip)"
+}
 
 # Call getopt to validate the provided input. 
-options=$(getopt -o s:t: -l source:target: -- "$@")
+options=$(getopt -o s:t:l: -l source:target:lbip: -- "$@")
 [ $? -eq 0 ] || { 
     echo "Incorrect options provided"
     exit 1
