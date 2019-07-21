@@ -98,12 +98,12 @@ items:
         securityContext:
           fsGroup: ${redis_group}
         initContainers:
-        - name: chmod-er
-          image: busybox:latest
-          command: ["ls", "-als", "/data", "&&", "/bin/chown", "-R", "${redis_group}", "/data" ]
-          volumeMounts:
-          - mountPath: /data
-            name: redis-data
+        # - name: chmod-er
+        #   image: busybox:latest
+        #   command: ["ls", "-als", "/data", "&&", "/bin/chown", "-R", "${redis_group}", "/data" ]
+        #   volumeMounts:
+        #   - mountPath: /data
+        #     name: redis-data
         containers:
         - image: ${docker_hub}redis:latest
           name: redis
