@@ -77,7 +77,7 @@ short_banner "Source registry : "$SOURCE_REGISTRY
 short_banner "Target registry : "$TARGET_REGISTRY
 short_banner "Load Balancer IP: "$LBIP
 short_banner "Storage Class   : "$STORAGE_CLASS
-short_banner "Random Number   : "$random_num
+short_banner "Hostname Number : "$random_num
 echo
 
 if [ -z ${LBIP+x} ] || \
@@ -141,21 +141,6 @@ else
         echo
     done
 fi
-
-# echo
-# short_banner "Applying Ingress"
-# ingress_file="yaml/ingress.yaml.env"
-# if [ ! -f $ingress_file ]
-# then
-#     short_banner "No ingress file ($ingress_file) found; skipping"
-# else
-#     sed 's/\${LBIP}/'"$LBIP"'/g' yaml/ingress.yaml.env | kubectl apply -f -
-#     if [ "$?" != "0" ]
-#     then
-#         short_banner "Couldn't apply Ingress; skipping"
-#     fi
-# fi
-# echo
 
 echo
 short_banner "Access ingress at cowbull.${LBIP}.xip.io"
