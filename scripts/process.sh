@@ -161,7 +161,13 @@ fi
 # fi
 
 echo
-yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
+if [ "$ACTION" == "load.sh" ]
+then
+    yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
+else
+    yaml_files=$(ls -r1 yaml/[0-9]*.yaml 2> /dev/null)
+fi
+
 if [ "$?" != "0" ]
 then
     short_banner "No yaml files found; skipping yaml."
