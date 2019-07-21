@@ -28,19 +28,22 @@ source scripts/banner.sh
 log_banner "load.sh" "Loading cowbull"
 usage() 
 { 
-    short_banner "load.sh -s source -t target -l lbip"
+    short_banner "load.sh -s source -t target -l lbip -c storage-class"
     short_banner "  -s source-registry (--source)"
     short_banner "  -t target-registry (--target)"
     short_banner "  -l load-balancer-ip (--lbip)"
+    short_banner "  -c storage-class (--storage-class)"
 }
 
 # Call getopt to validate the provided input. 
-options=$(getopt -o "s:t:l:" -l "source:,target:,lbip:" -- "$@")
+options=$(getopt -o "s:t:l:c:" -l "source:,target:,lbip:,storage-class:" -- "$@")
 [ $? -eq 0 ] || { 
     short_banner "Incorrect options provided"
     usage
     exit 1
 }
+
+STORAGE_CLASS="local-storage"
 
 eval set -- "$options"
 while true; do
@@ -57,6 +60,10 @@ while true; do
         LBIP="$2"
         shift 2
         ;;
+    -c | --storage-class)
+        STORAGE_CLASS="$2"
+        shift 2
+        ;;
     --)
         shift
         break
@@ -67,9 +74,13 @@ done
 short_banner "Source registry : "$SOURCE_REGISTRY
 short_banner "Target registry : "$TARGET_REGISTRY
 short_banner "Load Balancer IP: "$LBIP
+short_banner "Storage Class   : "$STORAGE_CLASS
 echo
 
-if [ -z ${LBIP+x} ] || [ -z ${SOURCE_REGISTRY} ] || [ -z ${TARGET_REGISTRY} ]
+if [ -z ${LBIP+x} ] || \
+   [ -z ${SOURCE_REGISTRY+x} ] || \
+   [ -z ${TARGET_REGISTRY+x} ] || \
+   [ -z ${STORAGE_CLASS+x} ] || 
 then
     short_banner "Unable to proceed: missing arguments"
     usage
@@ -77,8 +88,11 @@ then
 fi
 
 echo
+
 source_registry="$SOURCE_REGISTRY"
 target_registry="$TARGET_REGISTRY"
+storage_class="$STORAGE_CLASS"
+
 short_banner "Preparing images; pulling from $source_registry and pushing to $target_registry"
 images=("cowbull:2.0.119 cowbull_webapp:1.0.193")
 for image in $images
@@ -106,8 +120,6 @@ then
     short_banner "No yaml files found; skipping yaml."
 else
     short_banner "Processing: $yaml_files"
-    storage_class="local-storage"
-    #storage_class="example-nfs"
     for file in $yaml_files
     do
         short_banner "Applying yaml for: $file"
