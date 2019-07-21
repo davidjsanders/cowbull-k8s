@@ -122,7 +122,6 @@ if [ "$?" != "0" ]
 then
     short_banner "No yaml files found; skipping yaml."
 else
-    short_banner "Processing: $yaml_files"
     for file in $yaml_files
     do
         short_banner "Applying yaml for: $file"
