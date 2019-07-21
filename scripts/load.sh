@@ -45,8 +45,8 @@ options=$(getopt -o "s:t:l:c:d:" -l "source:,target:,lbip:,storage-class:,direct
 }
 
 STORAGE_CLASS="local-storage"
-DIRECTORY="/datadrive/export/cowbull-2/redis-data"
-NFS_DIRECTORY="/datadrive/cowbull-2/redis-data"
+DIRECTORY="\/datadrive\/export\/cowbull-2\/redis-data"
+NFS_DIRECTORY="\/datadrive\/cowbull-2\/redis-data"
 random_num=$(cut -d'-' -f7 <<< `hostname`)
 redis_uid=999
 redis_gid=999
