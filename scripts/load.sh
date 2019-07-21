@@ -131,6 +131,7 @@ else
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
             s/\${target_registry}/'"$target_registry"'/g;
             s/\${random_num}/'"$random_num"'/g;
+            s/\${redis_group}/999/g;
             s/\${docker_hub}//g
         ' $file | kubectl apply -f - &> /dev/null
         if [ "$?" != "0" ]

@@ -95,15 +95,15 @@ items:
         labels:
           app: redis
       spec:
-        # securityContext:
-        #   fsGroup: 1000
-        # initContainers:
-        # - name: chmod-er
-        #   image: busybox:latest
-        #   command: ["/bin/chown", "-R", "1000", "/data" ]
-        #   volumeMounts:
-        #   - mountPath: /data
-        #     name: redis-data
+        securityContext:
+          fsGroup: ${redis_group}
+        initContainers:
+        - name: chmod-er
+          image: busybox:latest
+          command: ["/bin/chown", "-R", "${redis_group}", "/data" ]
+          volumeMounts:
+          - mountPath: /data
+            name: redis-data
         containers:
         - image: ${docker_hub}redis:latest
           name: redis
