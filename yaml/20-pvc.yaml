@@ -13,7 +13,7 @@ spec:
     - ReadWriteOnce
   storageClassName: ${STORAGE_CLASS}
   local:
-    path: "${DIRECTORY}"
+    path: "${NFS_DIRECTORY}"
   nodeAffinity:
     required:
       nodeSelectorTerms:

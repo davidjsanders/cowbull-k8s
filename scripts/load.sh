@@ -45,7 +45,13 @@ options=$(getopt -o "s:t:l:c:d:" -l "source:,target:,lbip:,storage-class:,direct
 }
 
 STORAGE_CLASS="local-storage"
-DIRECTORY="/datadrive/export/cowbull/redis-data"
+DIRECTORY="/datadrive/export/cowbull-2/redis-data"
+NFS_DIRECTORY="/datadrive/cowbull-2/redis-data"
+random_num=$(cut -d'-' -f7 <<< `hostname`)
+redis_uid=999
+redis_gid=999
+redis_tag="5.0.5-alpine3.10"
+
 
 eval set -- "$options"
 while true; do
@@ -77,14 +83,10 @@ while true; do
     esac
 done
 
-random_num=$(cut -d'-' -f7 <<< `hostname`)
-redis_uid=999
-redis_gid=999
-redis_tag="5.0.5-alpine3.10"
-
 short_banner "Source registry : "$SOURCE_REGISTRY
 short_banner "Target registry : "$TARGET_REGISTRY
 short_banner "Directory path  : "$DIRECTORY
+short_banner "NFS Directory   : "$NFS_DIRECTORY
 short_banner "Load Balancer IP: "$LBIP
 short_banner "Storage Class   : "$STORAGE_CLASS
 short_banner "Hostname Number : "$random_num
@@ -149,6 +151,7 @@ else
             s/\${LBIP}/'"$LBIP"'/g;
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
             s/\${DIRECTORY}/'"$DIRECTORY"'/g;
+            s/\${NFS_DIRECTORY}/'"$NFS_DIRECTORY"'/g;
             s/\${target_registry}/'"$target_registry"'/g;
             s/\${random_num}/'"$random_num"'/g;
             s/\${redis_gid}/'"$redis_gid"'/g;
