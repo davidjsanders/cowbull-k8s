@@ -129,12 +129,12 @@ do
     fi
 done
 
-echo
-if [ "$STORAGE_CLASS" == "local-storage" ]
-then
-    short_banner "Set permissions on persistent volume: "$DIRECTORY
-    sudo chown -R $redis_uid:$redis_gid $DIRECTORY
-fi
+# echo
+# if [ "$STORAGE_CLASS" == "local-storage" ]
+# then
+#     short_banner "Set permissions on persistent volume: "$DIRECTORY
+#     sudo chown -R $redis_uid:$redis_gid $DIRECTORY
+# fi
 
 echo
 yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
