@@ -164,8 +164,10 @@ echo
 if [ "$ACTION" == "load.sh" ]
 then
     yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
+    log_action="Applying"
 else
     yaml_files=$(ls -r1 yaml/[0-9]*.yaml 2> /dev/null)
+    log_action="Deleting"
 fi
 
 if [ "$?" != "0" ]
@@ -174,7 +176,7 @@ then
 else
     for file in $yaml_files
     do
-        short_banner "Applying yaml for: $file"
+        short_banner "${log_action} yaml for: $file"
         sed '
             s/\${LBIP}/'"$LBIP"'/g;
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
