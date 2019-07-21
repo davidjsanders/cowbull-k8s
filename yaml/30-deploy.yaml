@@ -100,7 +100,7 @@ items:
         initContainers:
         - name: chmod-er
           image: busybox:latest
-          command: ["/bin/chown", "-R", "${redis_group}", "/data" ]
+          command: ["ls", "-als", "/data", "&&", "/bin/chown", "-R", "${redis_group}", "/data" ]
           volumeMounts:
           - mountPath: /data
             name: redis-data
