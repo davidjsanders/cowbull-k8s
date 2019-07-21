@@ -80,7 +80,7 @@ echo
 if [ -z ${LBIP+x} ] || \
    [ -z ${SOURCE_REGISTRY+x} ] || \
    [ -z ${TARGET_REGISTRY+x} ] || \
-   [ -z ${STORAGE_CLASS+x} ] || 
+   [ -z ${STORAGE_CLASS+x} ]
 then
     short_banner "Unable to proceed: missing arguments"
     usage
