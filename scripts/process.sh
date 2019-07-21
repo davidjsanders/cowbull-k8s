@@ -109,8 +109,6 @@ else
     kubectl_action="delete"
 fi
 
-echo
-
 short_banner "Source registry : "$SOURCE_REGISTRY
 short_banner "Target registry : "$TARGET_REGISTRY
 short_banner "Directory path  : "$DIRECTORY
