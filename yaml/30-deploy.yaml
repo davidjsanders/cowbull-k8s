@@ -96,26 +96,26 @@ items:
           app: redis
       spec:
         securityContext:
-          fsGroup: ${redis_group}
-        initContainers:
-        - name: chmod-er
-          image: busybox:latest
-          command: ["/bin/chown", "-R", "${redis_group}:${redis_group}", "/data" ]
-          securityContext:
-            runAsUser: 0
-          volumeMounts:
-          - mountPath: /data
-            name: redis-data
+          fsGroup: ${redis_uid}
+        # initContainers:
+        # - name: chmod-er
+        #   image: busybox:latest
+        #   command: ["/bin/chown", "-R", "${redis_uid}:${redis_gid}", "/data" ]
+        #   securityContext:
+        #     runAsUser: 0
+        #   volumeMounts:
+        #   - mountPath: /data
+        #     name: redis-data
         containers:
-        - image: ${docker_hub}redis:latest
+        - image: ${docker_hub}redis:${redis_tag}
           name: redis
-          # resources:
-          #   limits:
-          #     memory: "200Mi"
-          #     cpu: "0.8"
-          #   requests:
-          #     memory: "100Mi"
-          #     cpu: "0.2"
+          resources:
+            limits:
+              memory: "500Mi"
+              cpu: "1.0"
+            requests:
+              memory: "100Mi"
+              cpu: "0.2"
           volumeMounts:
           - mountPath: /data
             name: redis-data

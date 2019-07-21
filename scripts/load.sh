@@ -28,15 +28,16 @@ source scripts/banner.sh
 log_banner "load.sh" "Loading cowbull"
 usage() 
 { 
-    short_banner "load.sh -s source -t target -l lbip -c storage-class"
+    short_banner "load.sh -s source -t target -l lbip -c storage-class -d path"
     short_banner "  -s source-registry (--source)"
     short_banner "  -t target-registry (--target)"
     short_banner "  -l load-balancer-ip (--lbip)"
     short_banner "  -c storage-class (--storage-class)"
+    short_banner "  -d directory (--directory)"
 }
 
 # Call getopt to validate the provided input. 
-options=$(getopt -o "s:t:l:c:" -l "source:,target:,lbip:,storage-class:" -- "$@")
+options=$(getopt -o "s:t:l:c:d:" -l "source:,target:,lbip:,storage-class:,directory:" -- "$@")
 [ $? -eq 0 ] || { 
     short_banner "Incorrect options provided"
     usage
@@ -44,6 +45,7 @@ options=$(getopt -o "s:t:l:c:" -l "source:,target:,lbip:,storage-class:" -- "$@"
 }
 
 STORAGE_CLASS="local-storage"
+DIRECTORY="/datadrive/export/cowbull"
 
 eval set -- "$options"
 while true; do
@@ -54,6 +56,10 @@ while true; do
         ;;
     -t | --target)
         TARGET_REGISTRY="$2"
+        shift 2
+        ;;
+    -d | --directory)
+        DIRECTORY="$2"
         shift 2
         ;;
     -l | --lbip)
@@ -72,12 +78,19 @@ while true; do
 done
 
 random_num=$(cut -d'-' -f7 <<< `hostname`)
+redis_uid=999
+redis_gid=999
+redis_tag="5.0.5-alpine3.10"
 
 short_banner "Source registry : "$SOURCE_REGISTRY
 short_banner "Target registry : "$TARGET_REGISTRY
+short_banner "Directory path  : "$DIRECTORY
 short_banner "Load Balancer IP: "$LBIP
 short_banner "Storage Class   : "$STORAGE_CLASS
 short_banner "Hostname Number : "$random_num
+short_banner "Redis GID       : "$redis_gid
+short_banner "Redis UID       : "$redis_uid
+short_banner "Redis tag       : "$redis_tag
 
 if [ -z ${LBIP+x} ] || \
    [ -z ${SOURCE_REGISTRY+x} ] || \
@@ -117,6 +130,13 @@ do
 done
 
 echo
+if [ "$STORAGE_CLASS" == "local-storage" ]
+then
+    short_banner "Set permissions on persistent volume: "$DIRECTORY
+    sudo chown -R $redis_uid:$redis_gid $DIRECTORY
+fi
+
+echo
 yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
 if [ "$?" != "0" ]
 then
@@ -130,7 +150,9 @@ else
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
             s/\${target_registry}/'"$target_registry"'/g;
             s/\${random_num}/'"$random_num"'/g;
-            s/\${redis_group}/999/g;
+            s/\${redis_gid}/'"$redis_gid"'/g;
+            s/\${redis_uid}/'"$redis_uid"'/g;
+            s/\${redis_tag}/'"$redis_tag"'/g;
             s/\${docker_hub}//g
         ' $file | kubectl apply -f - &> /dev/null
         if [ "$?" != "0" ]
