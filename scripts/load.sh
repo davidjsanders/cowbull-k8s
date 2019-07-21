@@ -100,6 +100,7 @@ if [ -z ${LBIP+x} ] || \
    [ -z ${TARGET_REGISTRY+x} ] || \
    [ -z ${STORAGE_CLASS+x} ]
 then
+    echo
     short_banner "Unable to proceed: missing required argument(s)"
     usage
     exit 1
