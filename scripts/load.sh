@@ -45,7 +45,7 @@ options=$(getopt -o "s:t:l:c:d:" -l "source:,target:,lbip:,storage-class:,direct
 }
 
 STORAGE_CLASS="local-storage"
-DIRECTORY="/datadrive/export/cowbull"
+DIRECTORY="/datadrive/export/cowbull/redis-data"
 
 eval set -- "$options"
 while true; do
