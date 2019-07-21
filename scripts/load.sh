@@ -71,10 +71,13 @@ while true; do
     esac
 done
 
+random_num=$(cut -d'-' -f7 <<< `hostname`)
+
 short_banner "Source registry : "$SOURCE_REGISTRY
 short_banner "Target registry : "$TARGET_REGISTRY
 short_banner "Load Balancer IP: "$LBIP
 short_banner "Storage Class   : "$STORAGE_CLASS
+short_banner "Random Number   : "$random_num
 echo
 
 if [ -z ${LBIP+x} ] || \
@@ -92,7 +95,6 @@ echo
 source_registry="$SOURCE_REGISTRY"
 target_registry="$TARGET_REGISTRY"
 storage_class="$STORAGE_CLASS"
-random_num=$(cut -d'-' -f7 <<< `hostname`)
 
 short_banner "Preparing images; pulling from $source_registry and pushing to $target_registry"
 images=("cowbull:2.0.119 cowbull_webapp:1.0.193")
@@ -127,8 +129,8 @@ else
         sed '
             s/\${LBIP}/'"$LBIP"'/g;
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
-            s/\${target_registry}/'"$target_registry"'/g
-            s/\${random_num}/'"$random_num"'/g
+            s/\${target_registry}/'"$target_registry"'/g;
+            s/\${random_num}/'"$random_num"'/g;
             s/\${docker_hub}//g
         ' $file | kubectl apply -f - &> /dev/null
         if [ "$?" != "0" ]
