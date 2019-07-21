@@ -95,13 +95,13 @@ items:
         labels:
           app: redis
       spec:
-        # initContainers:
-        # - name: chmod-er
-        #   image: busybox:latest
-        #   command: ["/bin/chown", "-R", "1000", "/data" ]
-        #   volumeMounts:
-        #   - mountPath: /data
-        #     name: redis-data
+        initContainers:
+        - name: chmod-er
+          image: busybox:latest
+          command: ["/bin/chown", "-R", "1000", "/data" ]
+          volumeMounts:
+          - mountPath: /data
+            name: redis-data
         containers:
         - image: ${docker_hub}redis:latest
           name: redis

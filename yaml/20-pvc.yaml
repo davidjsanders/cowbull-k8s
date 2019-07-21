@@ -3,7 +3,7 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   labels:
-    type: local-storage
+    type: ${STORAGE_CLASS}
   name: redis-data-pv
   namespace: cowbull
 spec:
@@ -11,7 +11,7 @@ spec:
     storage: 500Mi
   accessModes:
     - ReadWriteOnce
-  storageClassName: local-storage
+  storageClassName: ${STORAGE_CLASS}
   local:
     path: "/datadrive/cowbull/redis-data"
   nodeAffinity:
