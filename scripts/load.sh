@@ -117,6 +117,7 @@ do
     fi
 done
 
+echo
 yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
 if [ "$?" != "0" ]
 then
@@ -137,7 +138,6 @@ else
         then
             short_banner "There was an error applying $file"
         fi
-        echo
     done
 fi
 
