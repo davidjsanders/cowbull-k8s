@@ -44,7 +44,8 @@ options=$(getopt -o "s:t:l:c:" -l "source:,target:,lbip:,storage-class:" -- "$@"
 }
 
 # Define defaults
-STORAGE_CLASS="local-storage"
+#STORAGE_CLASS="local-storage"
+STORAGE_CLASS="example-nfs"
 DIRECTORY="/datadrive/export/cowbull/redis-data"
 NFS_DIRECTORY="\/datadrive\/cowbull\/redis-data"
 
