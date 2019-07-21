@@ -1,33 +1,33 @@
 ---
-# kind: PersistentVolume
-# apiVersion: v1
-# metadata:
-#   labels:
-#     type: ${STORAGE_CLASS}
-#   name: redis-data-pv
-#   namespace: cowbull
-# spec:
-#   capacity:
-#     storage: 500Mi
-#   accessModes:
-#     - ReadWriteOnce
-#   storageClassName: ${STORAGE_CLASS}
-#   local:
-#     path: "${NFS_DIRECTORY}"
-#   nodeAffinity:
-#     required:
-#       nodeSelectorTerms:
-#       - matchExpressions:
-#          - key: kubernetes.io/hostname
-#            operator: In
-#            values: 
-#            - "vm-djs-k8s-worker-1-eus-${host_number}"
-#            - "vm-djs-k8s-worker-2-eus-${host_number}"
-#       # - matchExpressions:
-#       #    - key: node-role.kubernetes.io/master
-#       #      operator: DoesNotExist
-#   persistentVolumeReclaimPolicy: Retain
-# ---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  labels:
+    type: ${STORAGE_CLASS}
+  name: redis-data-pv
+  namespace: cowbull
+spec:
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ${STORAGE_CLASS}
+  local:
+    path: "${NFS_DIRECTORY}"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+         - key: kubernetes.io/hostname
+           operator: In
+           values: 
+           - "vm-djs-k8s-worker-1-eus-${host_number}"
+           - "vm-djs-k8s-worker-2-eus-${host_number}"
+      # - matchExpressions:
+      #    - key: node-role.kubernetes.io/master
+      #      operator: DoesNotExist
+  persistentVolumeReclaimPolicy: Retain
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
