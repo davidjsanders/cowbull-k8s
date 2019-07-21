@@ -25,5 +25,5 @@ set -o pipefail
 #
 source scripts/banner.sh
 
-log_banner "delete.sh" "Loading cowbull"
+log_banner "delete.sh" "Deleting cowbull"
 source scripts/process.sh "$@" --delete
