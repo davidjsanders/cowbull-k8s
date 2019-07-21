@@ -148,6 +148,7 @@ else
         sed '
             s/\${LBIP}/'"$LBIP"'/g;
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
+            s/\${DIRECTORY}/'"$DIRECTORY"'/g;
             s/\${target_registry}/'"$target_registry"'/g;
             s/\${random_num}/'"$random_num"'/g;
             s/\${redis_gid}/'"$redis_gid"'/g;
