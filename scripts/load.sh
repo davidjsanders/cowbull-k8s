@@ -78,7 +78,6 @@ short_banner "Target registry : "$TARGET_REGISTRY
 short_banner "Load Balancer IP: "$LBIP
 short_banner "Storage Class   : "$STORAGE_CLASS
 short_banner "Hostname Number : "$random_num
-echo
 
 if [ -z ${LBIP+x} ] || \
    [ -z ${SOURCE_REGISTRY+x} ] || \
