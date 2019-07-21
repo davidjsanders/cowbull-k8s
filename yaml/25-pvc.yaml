@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: cowbull
+  name: redis-data-pvc
+  namespace: cowbull
+spec:
+  storageClassName: ${STORAGE_CLASS}
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
