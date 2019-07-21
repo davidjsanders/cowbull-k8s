@@ -25,7 +25,6 @@ set -o pipefail
 #
 source scripts/banner.sh
 
-log_banner "process.sh" "Processing cowbull"
 usage() 
 { 
     short_banner "(load.sh|delete.sh) -s source -t target -l lbip -c storage-class -d path"
