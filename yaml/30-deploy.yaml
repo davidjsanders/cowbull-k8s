@@ -95,8 +95,8 @@ items:
         labels:
           app: redis
       spec:
-        securityContext:
-          fsGroup: ${redis_uid}
+        # securityContext:
+        #   fsGroup: ${redis_uid}
         # initContainers:
         # - name: chmod-er
         #   image: busybox:latest
