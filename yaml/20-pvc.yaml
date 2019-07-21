@@ -21,8 +21,8 @@ spec:
          - key: kubernetes.io/hostname
            operator: In
            values: 
-           - "vm-djs-k8s-worker-1-eus-${random_num}"
-           - "vm-djs-k8s-worker-2-eus-${random_num}"
+           - "vm-djs-k8s-worker-1-eus-${host_number}"
+           - "vm-djs-k8s-worker-2-eus-${host_number}"
       # - matchExpressions:
       #    - key: node-role.kubernetes.io/master
       #      operator: DoesNotExist

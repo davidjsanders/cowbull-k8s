@@ -33,25 +33,28 @@ usage()
     short_banner "  -t target-registry (--target)"
     short_banner "  -l load-balancer-ip (--lbip)"
     short_banner "  -c storage-class (--storage-class)"
-    short_banner "  -d directory (--directory)"
 }
 
 # Call getopt to validate the provided input. 
-options=$(getopt -o "s:t:l:c:d:" -l "source:,target:,lbip:,storage-class:,directory:" -- "$@")
+options=$(getopt -o "s:t:l:c:" -l "source:,target:,lbip:,storage-class:" -- "$@")
 [ $? -eq 0 ] || { 
     short_banner "Incorrect options provided"
     usage
     exit 1
 }
 
+# Define defaults
 STORAGE_CLASS="local-storage"
-DIRECTORY="/datadrive/export/cowbull-2/redis-data"
-NFS_DIRECTORY="\/datadrive\/cowbull-2\/redis-data"
-random_num=$(cut -d'-' -f7 <<< `hostname`)
+DIRECTORY="/datadrive/export/cowbull/redis-data"
+NFS_DIRECTORY="\/datadrive\/cowbull\/redis-data"
+
+# Define variables and defaults
+host_number=$(cut -d'-' -f7 <<< `hostname`)
 redis_uid=999
 redis_gid=999
 redis_tag="5.0.5-alpine3.10"
-
+cowbull_webapp_version="1.0.193"
+cowbull_version="2.0.119"
 
 eval set -- "$options"
 while true; do
@@ -62,10 +65,6 @@ while true; do
         ;;
     -t | --target)
         TARGET_REGISTRY="$2"
-        shift 2
-        ;;
-    -d | --directory)
-        DIRECTORY="$2"
         shift 2
         ;;
     -l | --lbip)
@@ -89,17 +88,19 @@ short_banner "Directory path  : "$DIRECTORY
 short_banner "NFS Directory   : "$NFS_DIRECTORY
 short_banner "Load Balancer IP: "$LBIP
 short_banner "Storage Class   : "$STORAGE_CLASS
-short_banner "Hostname Number : "$random_num
+short_banner "Hostname Number : "$host_number
 short_banner "Redis GID       : "$redis_gid
 short_banner "Redis UID       : "$redis_uid
 short_banner "Redis tag       : "$redis_tag
+short_banner "Cowbull ver.    : "$cowbull_version
+short_banner "Web App ver.    : "$cowbull_webapp_version
 
 if [ -z ${LBIP+x} ] || \
    [ -z ${SOURCE_REGISTRY+x} ] || \
    [ -z ${TARGET_REGISTRY+x} ] || \
    [ -z ${STORAGE_CLASS+x} ]
 then
-    short_banner "Unable to proceed: missing arguments"
+    short_banner "Unable to proceed: missing required argument(s)"
     usage
     exit 1
 fi
@@ -111,7 +112,7 @@ target_registry="$TARGET_REGISTRY"
 storage_class="$STORAGE_CLASS"
 
 short_banner "Preparing images; pulling from $source_registry and pushing to $target_registry"
-images=("cowbull:2.0.119 cowbull_webapp:1.0.193")
+images=("cowbull:${cowbull_version} cowbull_webapp:${cowbull_webapp_version}")
 for image in $images
 do
     image_name="$source_registry/$image"
@@ -152,10 +153,12 @@ else
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
             s/\${NFS_DIRECTORY}/'"$NFS_DIRECTORY"'/g;
             s/\${target_registry}/'"$target_registry"'/g;
-            s/\${random_num}/'"$random_num"'/g;
+            s/\${host_number}/'"$host_number"'/g;
             s/\${redis_gid}/'"$redis_gid"'/g;
             s/\${redis_uid}/'"$redis_uid"'/g;
             s/\${redis_tag}/'"$redis_tag"'/g;
+            s/\${cowbull_version}/'"$cowbull_version"'/g;
+            s/\${cowbull_webapp_version}/'"$cowbull_webapp_version"'/g;
             s/\${docker_hub}//g
         ' $file | kubectl apply -f - &> /dev/null
         if [ "$?" != "0" ]

@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 items:
 - apiVersion: extensions/v1beta1
@@ -22,7 +23,7 @@ items:
           - name: PERSISTER
             value: '{"engine_name": "redis", "parameters": {"host": "redis-svc", "port":
               6379, "db": 0}}'
-          image: ${target_registry}/cowbull:2.0.119
+          image: ${target_registry}/cowbull:${cowbull_version}
           readinessProbe:
             tcpSocket:
               port: 8080
@@ -64,7 +65,7 @@ items:
             value: cowbull-svc
           - name: COWBULL_VERSION
             value: v1
-          image: ${target_registry}/cowbull_webapp:1.0.193
+          image: ${target_registry}/cowbull_webapp:${cowbull_webapp_version}
           readinessProbe:
             tcpSocket:
               port: 8080
