@@ -29,6 +29,14 @@ items:
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /cowbull/healthcheck/liveness.sh
+            initialDelaySeconds: 15
+            periodSeconds: 15
           name: cowbull-svc
           resources:
             limits:
