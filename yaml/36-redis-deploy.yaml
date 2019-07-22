@@ -1,0 +1,55 @@
+---
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: redis
+    name: redis
+    namespace: cowbull
+  spec:
+    replicas: 1
+    strategy: {}
+    template:
+      metadata:
+        labels:
+          app: redis
+      spec:
+        # securityContext:
+        #   fsGroup: 999
+        # initContainers:
+        # - name: chmod-er
+        #   image: busybox:latest
+        #   command: ["/bin/chown", "-R", "${redis_uid}:${redis_gid}", "/data" ]
+        #   securityContext:
+        #     runAsUser: 0
+        #   volumeMounts:
+        #   - mountPath: /data
+        #     name: redis-data
+        containers:
+        - image: ${docker_hub}redis:${redis_tag}
+          name: redis
+          resources:
+            limits:
+              memory: "500Mi"
+              cpu: "1.0"
+            requests:
+              memory: "100Mi"
+              cpu: "0.2"
+          volumeMounts:
+          - mountPath: /data
+            name: redis-data
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        restartPolicy: Always
+        volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data-pvc
+  status: {}
+kind: List
+metadata: {}

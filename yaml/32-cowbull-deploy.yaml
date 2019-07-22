@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: cowbull-svc
+    name: cowbull-svc
+    namespace: cowbull
+  spec:
+    replicas: 3
+    strategy: {}
+    template:
+      metadata:
+        labels:
+          app: cowbull-svc
+      spec:
+        containers:
+        - env:
+          - name: LOGGING_LEVEL
+            value: "10"
+          - name: PERSISTER
+            value: '{"engine_name": "redis", "parameters": {"host": "redis-svc", "port":
+              6379, "db": 0}}'
+          image: ${target_registry}/cowbull:${cowbull_version}
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          name: cowbull-svc
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "1"
+            requests:
+              memory: "100Mi"
+              cpu: "0.2"
+        restartPolicy: Always
+kind: List
+metadata: {}

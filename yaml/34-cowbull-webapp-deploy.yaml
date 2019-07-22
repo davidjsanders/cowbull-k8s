@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      app: cowbull-webapp
+    name: cowbull-webapp
+    namespace: cowbull
+  spec:
+    replicas: 5
+    strategy: {}
+    template:
+      metadata:
+        labels:
+          app: cowbull-webapp
+      spec:
+        containers:
+        - env:
+          - name: BUILD_NUMBER
+            value: ${cowbull_webapp_version}
+          - name: COWBULL_ENVIRONMENT
+            value: ${cowbull_version}
+          - name: COWBULL_PORT
+            value: "8080"
+          - name: COWBULL_SERVER
+            value: cowbull-svc
+          - name: COWBULL_VERSION
+            value: v1
+          image: ${target_registry}/cowbull_webapp:${cowbull_webapp_version}
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          name: cowbull-webapp
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "0.5"
+            requests:
+              memory: "100Mi"
+              cpu: "0.1"
+        restartPolicy: Always
+  status: {}
+kind: List
+metadata: {}
