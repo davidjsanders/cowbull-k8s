@@ -55,7 +55,7 @@ redis_uid=999
 redis_gid=999
 redis_tag="5.0.5-alpine3.10"
 cowbull_webapp_version="2.0.10"
-cowbull_version="2.0.119"
+cowbull_version="2.1.19"
 
 eval set -- "$options"
 while true; do
