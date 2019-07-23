@@ -20,7 +20,6 @@ items:
         - image: ${target_registry}/cowbull:${cowbull_version}
           envFrom : #<-- Add this and the following two lines
           - configMapRef:
-              namespace: default
               name: cowbull-config
           # env:
           # - name: LOGGING_LEVEL
