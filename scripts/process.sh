@@ -128,7 +128,7 @@ storage_class="$STORAGE_CLASS"
 
 if [ "$ACTION" == "load.sh" ]
 then
-    temp=$(kubectl get namespaces cowbull)
+    temp=$(kubectl get namespaces cowbull 2> /dev/null)
     ret_stat="$?"
     if [ "$ret_stat" != "0" ]
     then
