@@ -32,7 +32,7 @@ items:
           livenessProbe:
             exec:
               command:
-              - /bin/bash
+              - /bin/sh
               - -c
               - /cowbull/healthcheck/liveness.sh
             initialDelaySeconds: 15
