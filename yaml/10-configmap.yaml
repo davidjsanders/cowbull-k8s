@@ -3,7 +3,7 @@ data:
   LOGGING_LEVEL: "10"
   PERSISTER: |-
     {"engine_name": "redis", "parameters": {"host": "redis-svc", "port":
-    6379, "db": 0}}
+    6379, "db": 0, "password": "fnhy1d3TNo"}}
 kind: ConfigMap
 metadata:
   name: cowbull-config
