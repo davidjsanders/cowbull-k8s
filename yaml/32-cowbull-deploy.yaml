@@ -18,15 +18,9 @@ items:
       spec:
         containers:
         - image: ${target_registry}/cowbull:${cowbull_version}
-          envFrom : #<-- Add this and the following two lines
+          envFrom:
           - configMapRef:
               name: cowbull-config
-          # env:
-          # - name: LOGGING_LEVEL
-          #   value: "10"
-          # - name: PERSISTER
-          #   value: '{"engine_name": "redis", "parameters": {"host": "redis-svc", "port":
-          #     6379, "db": 0}}'
           readinessProbe:
             tcpSocket:
               port: 8080

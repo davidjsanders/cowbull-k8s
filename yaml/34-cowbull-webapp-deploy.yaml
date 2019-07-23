@@ -17,18 +17,10 @@ items:
           app: cowbull-webapp
       spec:
         containers:
-        - env:
-          - name: BUILD_NUMBER
-            value: ${cowbull_webapp_version}
-          - name: COWBULL_ENVIRONMENT
-            value: ${cowbull_version}
-          - name: COWBULL_PORT
-            value: "8080"
-          - name: COWBULL_SERVER
-            value: cowbull-svc
-          - name: COWBULL_VERSION
-            value: v1
-          image: ${target_registry}/cowbull_webapp:${cowbull_webapp_version}
+        - image: ${target_registry}/cowbull_webapp:${cowbull_webapp_version}
+          envFrom:
+          - configMapRef:
+              name: cowbull-webapp-config
           readinessProbe:
             tcpSocket:
               port: 8080
