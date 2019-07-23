@@ -128,12 +128,14 @@ storage_class="$STORAGE_CLASS"
 
 if [ "$ACTION" == "load.sh" ]
 then
-    temp=$(kubectl get namespaces default)
+    temp=$(kubectl get namespaces cowbull)
     ret_stat="$?"
     if [ "$ret_stat" != "0" ]
     then
         short_banner "Creating namespace cowbull"
         kubectl apply -f setup/10-namespace.yaml
+    else
+        short_banner "Using namespace cowbull"
     fi
     short_banner "Preparing images; pulling from $source_registry and pushing to $target_registry"
     images=("cowbull:${cowbull_version} cowbull_webapp:${cowbull_webapp_version}")
