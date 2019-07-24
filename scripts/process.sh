@@ -44,9 +44,9 @@ options=$(getopt -o "s:t:l:c:" -l "load,delete,source:,target:,lbip:,storage-cla
 
 # Define defaults
 STORAGE_CLASS="local-storage"
-#STORAGE_CLASS="example-nfs"
-DIRECTORY="/datadrive/export/cowbull/redis-data"
-NFS_DIRECTORY="\/datadrive\/redis"
+SOURCE_REGISTRY="dsanderscan"
+TARGET_REGISTRY="k8s-master:32081"
+STORAGE="\/datadrive\/redis"
 ACTION="load.sh"
 
 # Define variables and defaults
@@ -105,14 +105,29 @@ fi
 if [ "$ACTION" == "load.sh" ]
 then
     kubectl_action="apply"
+    config_map=$(kubectl -n cowbull get configmaps cowbull-config)
+    ret_stat=$?
+    if [ "$ret_stat" == "0" ]
+    then
+        echo "The configuration map (configmap) cowbull-config was not found"
+        echo "It needs to exist before running the loader."
+        exit $ret_stat
+    fi
+    config_map=$(kubectl -n cowbull get configmaps cowbull-webapp-config)
+    ret_stat=$?
+    if [ "$ret_stat" == "0" ]
+    then
+        echo "The configuration map (configmap) cowbull-webapp-config was not found"
+        echo "It needs to exist before running the loader."
+        exit $ret_stat
+    fi
 else
     kubectl_action="delete"
 fi
 
 short_banner "Source registry : "$SOURCE_REGISTRY
 short_banner "Target registry : "$TARGET_REGISTRY
-short_banner "Directory path  : "$DIRECTORY
-short_banner "NFS Directory   : "$NFS_DIRECTORY
+short_banner "NFS Directory   : "$STORAGE
 short_banner "Load Balancer IP: "$LBIP
 short_banner "Storage Class   : "$STORAGE_CLASS
 short_banner "Hostname Number : "$host_number
@@ -186,7 +201,7 @@ else
         sed '
             s/\${LBIP}/'"$LBIP"'/g;
             s/\${STORAGE_CLASS}/'"$storage_class"'/g;
-            s/\${NFS_DIRECTORY}/'"$NFS_DIRECTORY"'/g;
+            s/\${STORAGE}/'"$STORAGE"'/g;
             s/\${target_registry}/'"$target_registry"'/g;
             s/\${host_number}/'"$host_number"'/g;
             s/\${redis_gid}/'"$redis_gid"'/g;
