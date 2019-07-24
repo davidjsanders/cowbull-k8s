@@ -46,7 +46,7 @@ options=$(getopt -o "s:t:l:c:" -l "load,delete,source:,target:,lbip:,storage-cla
 STORAGE_CLASS="local-storage"
 #STORAGE_CLASS="example-nfs"
 DIRECTORY="/datadrive/export/cowbull/redis-data"
-NFS_DIRECTORY="\/datadrive\/cowbull\/redis-data"
+NFS_DIRECTORY="\/datadrive\/redis"
 ACTION="load.sh"
 
 # Define variables and defaults
