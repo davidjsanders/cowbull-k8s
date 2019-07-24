@@ -105,12 +105,13 @@ fi
 if [ "$ACTION" == "load.sh" ]
 then
     kubectl_action="apply"
-    config_map=$(kubectl -n cowbull get configmaps cowbull-config)
+    config_map=$(kubectl -n cowbull get configmaps --no-headers cowbull-config)
     ret_stat=$?
     if [ "$ret_stat" == "0" ]
     then
         echo "The configuration map (configmap) cowbull-config was not found"
         echo "It needs to exist before running the loader."
+        echo "config_map -> $config_map"
         exit $ret_stat
     fi
     config_map=$(kubectl -n cowbull get configmaps cowbull-webapp-config)
