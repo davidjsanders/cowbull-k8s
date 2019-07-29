@@ -31,16 +31,16 @@ source scripts/banner.sh
 source scripts/usage.sh
 
 # Include the get options routines
-#args="$@"
-#source scripts/get-options.sh
-options=$(getopt -o "s:t:l:c:v:w:" -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" -- "$@")
-ret_stat=$?
-if [ $ret_stat -eq 0 ]
-then 
-    short_banner "Incorrect options provided; exit code $ret_stat"
-    usage
-    exit 1
-fi
+args="$@"
+source scripts/get-options.sh
+# options=$(getopt -o "s:t:l:c:v:w:" -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" -- "$@")
+# ret_stat=$?
+# if [ "$ret_stat" != "0" ]
+# then 
+#     short_banner "Incorrect options provided; exit code $ret_stat"
+#     usage
+#     exit 1
+# fi
 
 # Set the default values.
 source scripts/defaults.sh

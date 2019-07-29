@@ -6,9 +6,10 @@ options=$(
         -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" \
         -- "$args"
 )
-if [ $? -eq 0 ]
+ret_stat="$?"
+if [ "$ret_stat" != "0" ]
 then 
-    short_banner "Incorrect options provided"
+    short_banner "Incorrect options provided; exit code: $ret_stat"
     usage
     exit 1
 fi
