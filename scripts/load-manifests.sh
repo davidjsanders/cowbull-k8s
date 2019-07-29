@@ -24,3 +24,8 @@ else
         fi
     done
 fi
+if [ "$action" == "delete.sh" ]
+then
+    short_banner "Remember the namespace and configmaps have not been deleted!"
+    short_banner "If required, delete them with: kubectl delete namespaces cowbull"
+fi
