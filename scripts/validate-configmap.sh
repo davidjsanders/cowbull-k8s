@@ -4,11 +4,11 @@ if [ "$ret_stat" != "0" ]
 then
     if [ -f .local/$1.yaml ]
     then
-        short_banner "Loading cowbull configuration from local manifest"
+        short_banner "Loading $1 configuration from local manifest"
         kubectl apply -n cowbull -f .local/$1.yaml &> /dev/null
         if [ "$?" != "0" ]
         then
-            short_banner "Unable to apply configuration map manifest!"
+            short_banner "Unable to apply configuration map $1 manifest!"
             exit 1
         fi
     else
@@ -19,6 +19,6 @@ then
         exit $ret_stat
     fi
 else
-    short_banner "Found configmap $1"
+    short_banner "Found configmap: $1"
 fi
 
