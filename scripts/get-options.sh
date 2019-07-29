@@ -4,11 +4,10 @@ options=$(
     getopt \
         -o "s:t:l:c:v:w:" \
         -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" \
-        -n "parse-options" \
+        -n "cowbull" \
         -- $args
 )
 ret_stat="$?"
-#short_banner "Exit status from getopt: $ret_stat"
 
 if [ "$ret_stat" != "0" ]
 then 
