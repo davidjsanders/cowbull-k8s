@@ -7,6 +7,7 @@ options=$(
         -- "$args"
 )
 ret_stat="$?"
+short_banner "Exit status from getopt: $ret_stat"
 if [ "$ret_stat" != "0" ]
 then 
     short_banner "Incorrect options provided; exit code: $ret_stat"
