@@ -34,9 +34,10 @@ source scripts/usage.sh
 #args="$@"
 #source scripts/get-options.sh
 options=$(getopt -o "s:t:l:c:v:w:" -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" -- "$@")
-if [ $? -eq 0 ]
+ret_stat=$?
+if [ $ret_stat -eq 0 ]
 then 
-    short_banner "Incorrect options provided"
+    short_banner "Incorrect options provided; exit code $ret_stat"
     usage
     exit 1
 fi
