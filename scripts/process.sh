@@ -31,6 +31,7 @@ source scripts/banner.sh
 source scripts/usage.sh
 
 # Include the get options routines
+args="$@"
 source scripts/get-options.sh
 
 # Set the default values.
