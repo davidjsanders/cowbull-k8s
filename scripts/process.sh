@@ -42,7 +42,13 @@ source scripts/load-manifests.sh # Apply/delete the yaml manifests
 storage_class="$STORAGE_CLASS"
 
 echo
-source scripts/dump-values.sh   # Display the values after argument processing
+if [ "$ACTION" == "delete.sh" ]
+then
+    short_banner "Remember the namespace and configmaps have not been deleted!"
+    short_banner "If required, delete them with: kubectl delete namespaces cowbull"
+else
+    source scripts/dump-values.sh   # Display the values after argument processing
+fi
 echo
 
 log_banner "$ACTION" "Done."
