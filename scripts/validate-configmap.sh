@@ -8,7 +8,7 @@ then
         kubectl apply -n cowbull -f .local/$1.yaml
     else
         short_banner "Local manifest for $1 was not found."
-        short_banner "It needs to exist in .local before running the loader."
+        short_banner "It needs to exist before running the loader as a configmap or a file: .local/$1.yaml"
         short_banner "It must contain..."
         cat examples/$1.example
         exit $ret_stat
