@@ -1,5 +1,4 @@
 # Call getopt to validate the provided input. 
-echo "Arguments passed --> $args"
 options=$(
     getopt \
         -o "s:t:l:c:v:w:" \
