@@ -5,7 +5,12 @@ then
     if [ -f .local/$1.yaml ]
     then
         short_banner "Loading cowbull configuration from local manifest"
-        kubectl apply -n cowbull -f .local/$1.yaml
+        kubectl apply -n cowbull -f .local/$1.yaml &> /dev/null
+        if [ "$?" != "0" ]
+        then
+            short_banner "Unable to apply configuration map manifest!"
+            exit 1
+        fi
     else
         short_banner "Local manifest for $1 was not found."
         short_banner "It needs to exist before running the loader as a configmap or a file: .local/$1.yaml"
