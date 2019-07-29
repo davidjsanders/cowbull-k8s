@@ -1,4 +1,4 @@
-config_map=$(kubectl -n cowbull get configmaps --no-headers $1)
+config_map=$(kubectl -n cowbull get configmaps --no-headers $1 2> /dev/null)
 ret_stat=$?
 if [ "$ret_stat" != "0" ]
 then
