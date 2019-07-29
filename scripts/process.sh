@@ -33,12 +33,7 @@ source scripts/usage.sh
 # Include the get options routines
 #args="$@"
 #source scripts/get-options.sh
-options=$(
-    getopt \
-        -o "s:t:l:c:v:w:" \
-        -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" \
-        -- "$@"
-)
+options=$(getopt -o "s:t:l:c:v:w:" -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" -- "$@")
 if [ $? -eq 0 ]
 then 
     short_banner "Incorrect options provided"
