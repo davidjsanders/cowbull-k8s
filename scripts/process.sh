@@ -16,216 +16,46 @@
 # -------------------------------------------------------------------
 # 20 Jul 2019  | David Sanders               | First release.
 # -------------------------------------------------------------------
+# 28 Jul 2019  | David Sanders               | Refactor and add 
+#              |                             | support for app 
+#              |                             | versions as args.
+# -------------------------------------------------------------------
 
 # Set fail on pipeline
 set -o pipefail
 
-# Include the log_banner functions for logging purposes (see 
-# scripts/log_banner.sh)
-#
+# Include the log_banner
 source scripts/banner.sh
 
-usage() 
-{ 
-    short_banner "(load.sh|delete.sh) -s source -t target -l lbip -c storage-class -d path"
-    short_banner "  -s source-registry (--source)"
-    short_banner "  -t target-registry (--target)"
-    short_banner "  -l load-balancer-ip (--lbip)"
-    short_banner "  -c storage-class (--storage-class)"
-}
+# Include the definition of the usage function
+source scripts/usage.sh
 
-# Call getopt to validate the provided input. 
-options=$(getopt -o "s:t:l:c:" -l "load,delete,source:,target:,lbip:,storage-class:" -- "$@")
-[ $? -eq 0 ] || { 
-    short_banner "Incorrect options provided"
-    usage
-    exit 1
-}
+# Include the get options routines
+source scripts/get-options.sh
 
-# Define defaults
-STORAGE_CLASS="local-storage"
-SOURCE_REGISTRY="dsanderscan"
-TARGET_REGISTRY="k8s-master:32081"
-STORAGE="\/datadrive\/redis"
-ACTION="load.sh"
+# Set the default values.
+source scripts/defaults.sh
 
-# Define variables and defaults
-host_number=$(cut -d'-' -f7 <<< `hostname`)
-redis_uid=999
-redis_gid=999
-redis_tag="5.0.5-alpine3.10"
-cowbull_webapp_version="2.0.10"
-cowbull_version="2.1.24"
-
-eval set -- "$options"
-while true; do
-    case "$1" in
-    -s | --source)
-        SOURCE_REGISTRY="$2"
-        shift 2
-        ;;
-    -t | --target)
-        TARGET_REGISTRY="$2"
-        shift 2
-        ;;
-    -l | --lbip)
-        LBIP="$2"
-        shift 2
-        ;;
-    -c | --storage-class)
-        STORAGE_CLASS="$2"
-        shift 2
-        ;;
-    --load)
-        ACTION="load.sh"
-        shift
-        ;;
-    --delete)
-        ACTION="delete.sh"
-        shift
-        ;;
-    --)
-        shift
-        break
-        ;;
-    esac
-done
-
-if [ -z ${LBIP+x} ] || \
-   [ -z ${SOURCE_REGISTRY+x} ] || \
-   [ -z ${TARGET_REGISTRY+x} ] || \
-   [ -z ${STORAGE_CLASS+x} ]
-then
-    echo
-    short_banner "Unable to proceed: missing required argument(s)"
-    usage
-    exit 1
-fi
+# Parse the command arguments
+source scripts/parse-args.sh
 
 if [ "$ACTION" == "load.sh" ]
 then
-    kubectl_action="apply"
-    config_map=$(kubectl -n cowbull get configmaps --no-headers cowbull-config)
-    ret_stat=$?
-    if [ "$ret_stat" != "0" ]
-    then
-        echo "The configuration map (configmap) cowbull-config was not found"
-        echo "It needs to exist before running the loader."
-        echo "config_map -> $config_map"
-        exit $ret_stat
-    fi
-    config_map=$(kubectl -n cowbull get configmaps cowbull-webapp-config)
-    ret_stat=$?
-    if [ "$ret_stat" != "0" ]
-    then
-        echo "The configuration map (configmap) cowbull-webapp-config was not found"
-        echo "It needs to exist before running the loader."
-        echo "config_map -> $config_map"
-        exit $ret_stat
-    fi
+    source scripts/preflight-load.sh
 else
-    kubectl_action="delete"
+    source scripts/preflight-delete.sh
 fi
 
-short_banner "Source registry : "$SOURCE_REGISTRY
-short_banner "Target registry : "$TARGET_REGISTRY
-short_banner "NFS Directory   : "$STORAGE
-short_banner "Load Balancer IP: "$LBIP
-short_banner "Storage Class   : "$STORAGE_CLASS
-short_banner "Hostname Number : "$host_number
-short_banner "Redis GID       : "$redis_gid
-short_banner "Redis UID       : "$redis_uid
-short_banner "Redis tag       : "$redis_tag
-short_banner "Cowbull ver.    : "$cowbull_version
-short_banner "Web App ver.    : "$cowbull_webapp_version
+# Display the values after argument processing
+source scripts/dump-values.sh
 
-source_registry="$SOURCE_REGISTRY"
-target_registry="$TARGET_REGISTRY"
+# Apply/delete the yaml manifests
+source scripts/load-manifests.sh
+
 storage_class="$STORAGE_CLASS"
 
-if [ "$ACTION" == "load.sh" ]
-then
-    temp=$(kubectl get namespaces cowbull 2> /dev/null)
-    ret_stat="$?"
-    if [ "$ret_stat" != "0" ]
-    then
-        short_banner "Creating namespace cowbull"
-        kubectl apply -f setup/10-namespace.yaml
-    else
-        short_banner "Using namespace cowbull"
-    fi
-    short_banner "Preparing images; pulling from $source_registry and pushing to $target_registry"
-    images=("cowbull:${cowbull_version} cowbull_webapp:${cowbull_webapp_version}")
-    for image in $images
-    do
-        image_name="$source_registry/$image"
-        short_banner "Pull $target_registry/$image from local registry"
-        sudo docker pull ${target_registry}/$image &> /dev/null
-        ret_stat="$?"
-
-        if [ "$ret_stat" != "0" ]
-        then
-            short_banner "Not found, pulling $image_name from Docker Hub"
-            sudo docker pull $image_name &> /dev/null
-            short_banner "Tagging as $target_registry/$image"
-            sudo docker tag $image_name $target_registry/$image &> /dev/null
-            short_banner "Pushing as $target_registry/$image"
-            sudo docker push $target_registry/$image
-            echo
-        fi
-    done
-fi
-
-# echo
-# if [ "$STORAGE_CLASS" == "local-storage" ]
-# then
-#     short_banner "Set permissions on persistent volume: "$DIRECTORY
-#     sudo chown -R $redis_uid:$redis_gid $DIRECTORY
-# fi
-
-echo
-if [ "$ACTION" == "load.sh" ]
-then
-    yaml_files=$(ls -1 yaml/[0-9]*.yaml 2> /dev/null)
-    log_action="Applying"
-else
-    yaml_files=$(ls -r1 yaml/[0-9]*.yaml 2> /dev/null)
-    log_action="Deleting"
-fi
-
-if [ "$?" != "0" ]
-then
-    short_banner "No yaml files found; skipping yaml."
-else
-    for file in $yaml_files
-    do
-        short_banner "${log_action} yaml for: $file"
-        sed '
-            s/\${LBIP}/'"$LBIP"'/g;
-            s/\${STORAGE_CLASS}/'"$storage_class"'/g;
-            s/\${STORAGE}/'"$STORAGE"'/g;
-            s/\${target_registry}/'"$target_registry"'/g;
-            s/\${host_number}/'"$host_number"'/g;
-            s/\${redis_gid}/'"$redis_gid"'/g;
-            s/\${redis_uid}/'"$redis_uid"'/g;
-            s/\${redis_tag}/'"$redis_tag"'/g;
-            s/\${cowbull_version}/'"$cowbull_version"'/g;
-            s/\${cowbull_webapp_version}/'"$cowbull_webapp_version"'/g;
-            s/\${docker_hub}//g
-        ' $file | kubectl $kubectl_action -f - &> /dev/null
-        if [ "$?" != "0" ]
-        then
-            short_banner "There was an error applying $file"
-        fi
-    done
-fi
-
-if [ "$ACTION" == "load.sh" ]
-then
-    echo
-    short_banner "Access ingress at cowbull.${LBIP}.xip.io"
-    echo
-fi
+# Display the values after argument processing
+source scripts/dump-values.sh
 
 log_banner "$ACTION" "Done."
 echo
