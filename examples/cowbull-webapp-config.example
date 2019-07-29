@@ -1,0 +1,12 @@
+
+apiVersion: v1
+data:
+  BUILD_NUMBER: ${cowbull_webapp_version}
+  COWBULL_ENVIRONMENT: ${cowbull_version}
+  COWBULL_PORT: "8080"
+  COWBULL_SERVER: cowbull-svc
+  COWBULL_VERSION: "v1"
+kind: ConfigMap
+metadata:
+  name: cowbull-webapp-config
+  namespace: cowbull

@@ -1,0 +1,13 @@
+
+apiVersion: v1
+data:
+  LOGGING_LEVEL: "10"
+  PERSISTER: |-
+    {"engine_name": "redis", "parameters": {"host": "redis-svc", "port":
+    6379, "db": 0}}
+kind: ConfigMap
+metadata:
+  name: cowbull-config
+  namespace: cowbull
+
+# Note: add ,"password": "blah" after "db": 0 if using secure Redis

@@ -9,6 +9,8 @@ then
     else
         short_banner "Local manifest for $1 was not found."
         short_banner "It needs to exist in .local before running the loader."
+        short_banner "It must contain..."
+        cat examples/$1.example
         exit $ret_stat
     fi
 fi
