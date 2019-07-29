@@ -21,50 +21,29 @@
 #              |                             | versions as args.
 # -------------------------------------------------------------------
 
-# Set fail on pipeline
-set -o pipefail
-
-# Include the log_banner
-source scripts/banner.sh
-
-# Include the definition of the usage function
-source scripts/usage.sh
-
-# Include the get options routines
-args="$@"
-source scripts/get-options.sh
-# options=$(getopt -o "s:t:l:c:v:w:" -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" -- "$@")
-# ret_stat=$?
-# if [ "$ret_stat" != "0" ]
-# then 
-#     short_banner "Incorrect options provided; exit code $ret_stat"
-#     usage
-#     exit 1
-# fi
-
-# Set the default values.
-source scripts/defaults.sh
-
-# Parse the command arguments
-source scripts/parse-args.sh
+args="$@"                       # Get the command line arguments
+set -o pipefail                 # Set fail on pipeline
+source scripts/banner.sh        # Include the log_banner
+source scripts/usage.sh         # Include the definition of the usage function
+source scripts/get-options.sh   # Include the get options routines
+source scripts/defaults.sh      # Set the default values.
+source scripts/parse-args.sh    # Parse the command arguments
 
 if [ "$ACTION" == "load.sh" ]
 then
-    source scripts/preflight-load.sh
+    source scripts/preflight-load.sh    # Preflight setup for load
 else
-    source scripts/preflight-delete.sh
+    source scripts/preflight-delete.sh  # Preflight setup for delete
 fi
 
-# Display the values after argument processing
-source scripts/dump-values.sh
 
-# Apply/delete the yaml manifests
-source scripts/load-manifests.sh
+source scripts/load-manifests.sh # Apply/delete the yaml manifests
 
 storage_class="$STORAGE_CLASS"
 
-# Display the values after argument processing
-source scripts/dump-values.sh
+echo
+source scripts/dump-values.sh   # Display the values after argument processing
+echo
 
 log_banner "$ACTION" "Done."
 echo

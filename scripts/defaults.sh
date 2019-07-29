@@ -5,6 +5,7 @@ STORAGE="\/datadrive\/redis"
 ACTION="load.sh"
 COWBULL_WEBAPP_VERSION="2.0.10"
 COWBULL_VERSION="2.1.24"
+LBIP=$(cat ~/lbip.txt | grep "export LBIP" | cut -d'=' -f2)
 
 # Define variables and defaults
 host_number=$(cut -d'-' -f7 <<< `hostname`)
