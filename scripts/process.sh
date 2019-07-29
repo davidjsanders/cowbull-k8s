@@ -31,8 +31,20 @@ source scripts/banner.sh
 source scripts/usage.sh
 
 # Include the get options routines
-args="$@"
-source scripts/get-options.sh
+#args="$@"
+#source scripts/get-options.sh
+options=$(
+    getopt \
+        -o "s:t:l:c:v:w:" \
+        -l "load,delete,source:,target:,lbip:,storage-class:,cowbull-version:,webapp-version:" \
+        -- "$@"
+)
+if [ $? -eq 0 ]
+then 
+    short_banner "Incorrect options provided"
+    usage
+    exit 1
+fi
 
 # Set the default values.
 source scripts/defaults.sh
