@@ -19,6 +19,7 @@ do
         then
             short_banner "Problem pushing image; are you logged in to docker?"
             short_banner "Try: sudo docker login -u <theuser> k8s-master:32081"
+            exit 1
         fi
         echo
     fi
